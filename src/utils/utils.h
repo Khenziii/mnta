@@ -1,1 +1,4 @@
-extern void printandflush(char text[]);
+typedef struct {
+    int x;
+    int y;
+} Position;
