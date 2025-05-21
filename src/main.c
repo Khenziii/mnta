@@ -1,7 +1,7 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
 #include "./styles/styles.h"
-#include "./canvas/canvas.h"
+#include "./components/components.h"
 
 static void activate(GtkApplication *app, gpointer user_data) {
     GtkWidget *window = gtk_application_window_new(app);
@@ -16,7 +16,13 @@ static void activate(GtkApplication *app, gpointer user_data) {
     gtk_css_provider_load_from_data(css_provider, main_window, -1, NULL);
     gtk_style_context_add_provider_for_screen(screen, GTK_STYLE_PROVIDER(css_provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
-    setup_canvas(window);
+    GtkWidget *canvas = setup_canvas(window);
+
+    add_file(canvas, "stuff", 50, 50);
+    add_file(canvas, "other stuff", 250, 50);
+    add_file(canvas, "idk", 450, 50);
+    add_file(canvas, "whoa", 650, 50);
+
     gtk_widget_show_all(window);
 }
 

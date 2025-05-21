@@ -1,5 +1,5 @@
 #include "glib.h"
-#include <gtk/gtk.h>
+#include "gtk/gtk.h"
 #include "../utils/utils.h"
 
 typedef struct {
@@ -40,12 +40,9 @@ gboolean on_motion_notify(GtkWidget *widget, GdkEventMotion *event, gpointer use
     return TRUE;
 }
 
-void setup_canvas(GtkWidget *window) {
-    GtkWidget *container = gtk_fixed_new();
-    gtk_container_add(GTK_CONTAINER(window), container);
-
-    GtkWidget *drag_button = gtk_button_new_with_label("drag me :3");
-    gtk_fixed_put(GTK_FIXED(container), drag_button, 0, 0);
+void add_file(GtkWidget *container, char text[], guint x, guint y) {
+    GtkWidget *drag_button = gtk_button_new_with_label(text);
+    gtk_fixed_put(GTK_FIXED(container), drag_button, x, y);
 
     gtk_widget_set_events(container, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK);
 
