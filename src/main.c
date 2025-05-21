@@ -1,9 +1,11 @@
+#include "glib.h"
 #include <gtk/gtk.h>
 #include <stdio.h>
 #include "./styles/styles.h"
 #include "./components/components.h"
+#include "./filesystem/filesystem.h"
 
-static void activate(GtkApplication *app, gpointer user_data) {
+static void activate(GtkApplication *app, gpointer path) {
     GtkWidget *window = gtk_application_window_new(app);
     gtk_window_set_title(GTK_WINDOW(window), "MNTA");
     gtk_window_set_default_size(GTK_WINDOW(window), 500, 500);
@@ -17,21 +19,25 @@ static void activate(GtkApplication *app, gpointer user_data) {
     gtk_style_context_add_provider_for_screen(screen, GTK_STYLE_PROVIDER(css_provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
     GtkWidget *canvas = setup_canvas(window);
+    Items files = process_directory(path);
 
-    add_file(canvas, "stuff", 50, 50);
-    add_file(canvas, "other stuff", 250, 50);
-    add_file(canvas, "idk", 450, 50);
-    add_file(canvas, "whoa", 650, 50);
+    for (int i = 0; i < files.count; i++) {
+        Item item = files.items[i];
+        add_file(canvas, item.name, item.metadata.saved_location.x, item.metadata.saved_location.y);
+    }
 
-    gtk_widget_show_all(window);
+    gtk_widget_show_all(canvas);
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char *argv[]) {
+    char *path = ".";
+    if (argc > 1) path = argv[1];
+
     GtkApplication *app;
     int status;
 
     app = gtk_application_new("dev.khenzii.mnta", G_APPLICATION_DEFAULT_FLAGS);
-    g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
+    g_signal_connect(app, "activate", G_CALLBACK(activate), path);
     status = g_application_run(G_APPLICATION(app), argc, argv);
     g_object_unref(app);
 

@@ -42,11 +42,11 @@ gboolean on_motion_notify(GtkWidget *widget, GdkEventMotion *event, gpointer use
 
 void add_file(GtkWidget *container, char text[], guint x, guint y) {
     GtkWidget *drag_button = gtk_button_new_with_label(text);
-    gtk_fixed_put(GTK_FIXED(container), drag_button, x, y);
 
-    gtk_widget_set_events(container, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK);
-
+    gtk_widget_set_events(drag_button, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK);
     g_signal_connect(drag_button, "button-press-event", G_CALLBACK(on_button_press), container);
     g_signal_connect(drag_button, "button-release-event", G_CALLBACK(on_button_release), container);
     g_signal_connect(drag_button, "motion-notify-event", G_CALLBACK(on_motion_notify), container);
+
+    gtk_fixed_put(GTK_FIXED(container), drag_button, x, y);
 }
