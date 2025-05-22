@@ -1,11 +1,9 @@
 { pkgs ? import <nixpkgs> {}}:
 
+let
+  shared = import ./shared.nix { inherit pkgs; };
+in 
+
 pkgs.mkShell {
-  buildInputs = with pkgs; [
-    pkg-config
-    gcc
-    gnumake
-    gtk3.dev
-    glib.dev
-  ];
+    inherit (shared) buildInputs nativeBuildInputs;
 }
