@@ -19,7 +19,7 @@
           pname = "mnta";
           version = "1.0.0";
 
-          src = ./src;
+          src = ./.;
 
           inherit (shared) buildInputs nativeBuildInputs;
 
