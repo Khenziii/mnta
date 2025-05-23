@@ -23,7 +23,7 @@ static void activate(GtkApplication *app, gpointer path) {
 
     for (int i = 0; i < files.count; i++) {
         Item item = files.items[i];
-        add_file(canvas, item.name, item.metadata.saved_location.x, item.metadata.saved_location.y);
+        add_file(canvas, item.name, item.metadata.saved_location.x, item.metadata.saved_location.y, file_click_handler);
     }
 
     gtk_widget_show_all(canvas);
