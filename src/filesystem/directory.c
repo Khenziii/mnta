@@ -3,6 +3,7 @@
 #include "stdlib.h"
 #include "string.h"
 #include "./types.h"
+#include "../core/core.h"
 
 Items process_directory(char path[]) {
     uint capacity = 10;

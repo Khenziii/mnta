@@ -1,13 +1,14 @@
-#include "../core/core.h"
+#pragma once
+#include "../core/types.h"
 
-typedef struct {
+typedef struct Item {
     Metadata metadata;
     char *path;
     // Last segment of path.
     char *name;
 } Item;
 
-typedef struct {
+typedef struct Items {
     Item *items;
     int count;
 } Items;

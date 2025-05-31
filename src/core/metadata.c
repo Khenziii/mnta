@@ -1,6 +1,5 @@
-#include "glib.h"
 #include "assert.h"
-#include "./types.h"
+#include "../filesystem/types.h"
 
 // TODO: support changing this via config.
 #define FILES_PER_ROW 5
@@ -17,9 +16,4 @@ Metadata get_for_path(char absolute_path[], int element_count) {
     metadata.saved_location.y = FILES_CONTAINER_PADDING + (amount_of_rows * FILES_MARGIN_VERTICAL);
 
     return metadata;
-}
-
-// TODO: ...
-void file_click_handler() {
-    g_print("clicked a button!\n");
 }

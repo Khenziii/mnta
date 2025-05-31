@@ -1,4 +1,4 @@
-#include "gtk/gtk.h"
+#include "./canvas/canvas.h"
+#include "./file/file.h"
 
 extern GtkWidget* setup_canvas(GtkWidget *window);
-extern void add_file(GtkWidget *container, char text[], guint x, guint y, void (*on_click)());

@@ -9,5 +9,8 @@ all: $(OUT)
 $(OUT): $(SRC)
 	$(COMPILER) $(COMPILERFLAGS) -o $(OUT) $(SRC) $(LINKERFLAGS)
 
+debug:
+	$(COMPILER) $(COMPILERFLAGS) -g -o $(OUT) $(SRC) $(LINKERFLAGS)
+
 clean:
 	rm -f $(OUT)

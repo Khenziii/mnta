@@ -1,3 +1,3 @@
 #!/bin/sh
 
-make clean && make && GTK_DEBUG=interactive ./mnta
+make clean && make debug && GTK_DEBUG=interactive ./mnta
