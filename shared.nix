@@ -13,5 +13,6 @@
     gtk3.dev
     glib.dev
     vte.dev
+    cjson
   ];
 }
