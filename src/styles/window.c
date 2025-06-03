@@ -1,1 +1,3 @@
-const char main_window[] = "#main-window { background-color: #1A1A1A; }";
+#include "./colors.c"
+
+const char main_window[] = "#main-window { background-color: " BACKGROUND_HEX "; }";

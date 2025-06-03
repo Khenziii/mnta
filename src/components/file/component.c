@@ -7,7 +7,7 @@
 typedef struct {
     GtkWidget *container;
     Item item;
-    void (*on_click)(Item file);
+    void (*on_click)(GtkWidget *container, Item file);
 } EventContext;
 
 typedef struct {
@@ -43,7 +43,7 @@ gboolean on_button_release(GtkWidget *widget, GdkEventButton *event, EventContex
     gint total_distance =
         abs(dragging_state.positions.start_global.x - new_x)
         + abs(dragging_state.positions.start_global.y - new_y);
-    if (total_distance < CLICK_THRESHOLD) context->on_click(context->item);
+    if (total_distance < CLICK_THRESHOLD) context->on_click(context->container, context->item);
     
     return TRUE;
 }
@@ -64,7 +64,7 @@ gboolean on_button_destroy(GtkWidget *widget, EventContext *context) {
     return TRUE;
 }
 
-void add_file(GtkWidget *container, Item item, void (*on_click)()) {
+void add_file(GtkWidget *container, Item item, void (*on_click)(GtkWidget *container, Item file)) {
     GtkWidget *drag_button = gtk_button_new_with_label(item.name);
     EventContext *context = g_new(EventContext, 1);
     context->container = container;

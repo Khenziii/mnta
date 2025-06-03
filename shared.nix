@@ -12,5 +12,6 @@
   buildInputs = with pkgs; [
     gtk3.dev
     glib.dev
+    vte.dev
   ];
 }
