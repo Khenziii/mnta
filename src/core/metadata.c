@@ -1,5 +1,5 @@
 #include "assert.h"
-#include "../filesystem/types.h"
+#include "./types.h"
 
 // TODO: support changing this via config.
 #define FILES_PER_ROW 5
@@ -9,6 +9,7 @@
 
 Metadata get_for_path(char absolute_path[], int element_count) {
     Metadata metadata;
+
     int amount_of_rows = (element_count - 1) / FILES_PER_ROW;
 
     // TODO: try to get this from local storage.

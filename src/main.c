@@ -19,6 +19,7 @@ static void activate(GtkApplication *app, gpointer path) {
     gtk_style_context_add_provider_for_screen(screen, GTK_STYLE_PROVIDER(css_provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
     GtkWidget *canvas = setup_canvas(window);
+    UIState ui_state = get_ui_state();
     Items files = process_directory(path);
 
     for (int i = 0; i < files.count; i++) {
