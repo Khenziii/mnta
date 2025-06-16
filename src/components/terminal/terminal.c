@@ -24,9 +24,10 @@ void spawn_new_terminal(GtkWidget *passed_container, Item file) {
     terminal = vte_terminal_new();
     vte_terminal = VTE_TERMINAL(terminal);
 
+    Settings settings = get_settings();
+
     char editor_command[1000];
-    sprintf(editor_command, "nvim %s", file.path);
-    // TODO: support changing this via the config.
+    sprintf(editor_command, "%s %s", settings.editor_launch_command, file.path);
     const char *start_command[] = { "/bin/sh", "-c", editor_command, NULL };
 
     vte_terminal_spawn_async(

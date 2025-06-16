@@ -71,8 +71,13 @@ static cJSON* parse_json_string(char *json_string, char *object_name, void *obje
 }
 
 Settings* parse_settings_json_string(char *json_string) {
-    // TODO: implement this parser
-    return NULL;
+    Settings *settings = g_new(Settings, 1);
+    cJSON *root = parse_json_string(json_string, "Settings", settings);
+
+    char *editor_launch_command = get_string_field(root, "Settings", "editor_launch_command", settings);
+    settings->editor_launch_command = editor_launch_command;
+
+    return settings;
 }
 
 Position* parse_position_json(cJSON *root) {

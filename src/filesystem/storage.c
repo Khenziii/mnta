@@ -166,7 +166,7 @@ static void *get_data(char *path, FileGenerator file_generator, JSONParser parse
 Settings get_settings() {
     char *path = config_path;
     FileGenerator file_generator = add_default_settings;
-    JSONParser parser = (void *)parse_settings_json;
+    JSONParser parser = (void *)parse_settings_json_string;
 
     Settings *settings = (Settings *)get_data(path, file_generator, parser);
     return *settings;
@@ -175,7 +175,7 @@ Settings get_settings() {
 UIState get_ui_state() {
     char *path = ui_state_path;
     FileGenerator file_generator = add_default_ui_state;
-    JSONParser parser = (void *)parse_ui_state_json;
+    JSONParser parser = (void *)parse_ui_state_json_string;
 
     UIState *ui_state = (UIState *)get_data(path, file_generator, parser);
     return *ui_state;
