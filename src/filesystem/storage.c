@@ -163,6 +163,35 @@ static void *get_data(char *path, FileGenerator file_generator, JSONParser parse
     return parser(config_string);
 }
 
+static void load_ui_state_item_into_cjson_object(void *key, void *item_pointer, void *files_pointer) {
+    Item *item = item_pointer;
+    cJSON *files = files_pointer;
+
+    cJSON *saved_location = cJSON_CreateObject();
+    cJSON_AddNumberToObject(saved_location, "x", item->metadata.saved_location.x);
+    cJSON_AddNumberToObject(saved_location, "y", item->metadata.saved_location.y);
+
+    cJSON *metadata = cJSON_CreateObject();
+    cJSON_AddItemToObject(metadata, "saved_location", saved_location);
+
+    cJSON *file = cJSON_CreateObject();
+    cJSON_AddItemToObject(file, "metadata", metadata);
+    cJSON_AddStringToObject(file, "path", item->path);
+    cJSON_AddStringToObject(file, "name", item->name);
+
+    cJSON_AddItemToObject(files, item->path, file);
+}
+
+static cJSON* convert_ui_state_to_cjson_object(UIState ui_state) {
+    cJSON *root = cJSON_CreateObject();
+    cJSON *files = cJSON_CreateObject();
+
+    g_hash_table_foreach(ui_state.files, load_ui_state_item_into_cjson_object, files);
+
+    cJSON_AddItemToObject(root, "files", files);
+    return root;
+}
+
 Settings get_settings() {
     char *path = config_path;
     FileGenerator file_generator = add_default_settings;
@@ -179,4 +208,16 @@ UIState get_ui_state() {
 
     UIState *ui_state = (UIState *)get_data(path, file_generator, parser);
     return *ui_state;
+}
+
+void write_item_to_ui_state(Item item) {
+    UIState ui_state = get_ui_state();
+    Item *item_ptr = g_new(Item, 1);
+    *item_ptr = item;
+    g_hash_table_insert(ui_state.files, g_strdup(item.path), item_ptr);
+
+    cJSON *ui_state_json = convert_ui_state_to_cjson_object(ui_state);
+    char *ui_state_json_string = cJSON_Print(ui_state_json);
+
+    save_string_to_path(ui_state_path, ui_state_json_string);
 }

@@ -12,7 +12,6 @@ Metadata get_for_path(char absolute_path[], int element_count) {
 
     int amount_of_rows = (element_count - 1) / FILES_PER_ROW;
 
-    // TODO: try to get this from local storage.
     metadata.saved_location.x = FILES_CONTAINER_PADDING + ((element_count - 1 - amount_of_rows * FILES_PER_ROW) * FILES_MARGIN_HORIZONTAL);
     metadata.saved_location.y = FILES_CONTAINER_PADDING + (amount_of_rows * FILES_MARGIN_VERTICAL);
 

@@ -4,6 +4,7 @@
 #include "string.h"
 #include "./types.h"
 #include "../core/core.h"
+#include "../filesystem/filesystem.h"
 
 Items process_directory(char path[]) {
     uint capacity = 10;
@@ -16,6 +17,8 @@ Items process_directory(char path[]) {
     dir = opendir(path);
     if (dir == NULL) perror("opendir");
     
+    UIState current_ui_state = get_ui_state();
+
     while ((entry = readdir(dir)) != NULL) {
         uint skip_itertaion = strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0;
         if (skip_itertaion) continue;
@@ -31,9 +34,17 @@ Items process_directory(char path[]) {
         }
 
         Item item;
-        item.name = strdup(entry->d_name);
-        item.path = strdup(full_path);
-        item.metadata = get_for_path(full_path, items_count+1);
+        Item *stored_item = (Item *)g_hash_table_lookup(current_ui_state.files, full_path);
+        if (stored_item != NULL) {
+            item = *stored_item;
+        } else {
+            item.name = strdup(entry->d_name);
+            item.path = strdup(full_path);
+            item.metadata = get_for_path(full_path, items_count+1);
+
+            write_item_to_ui_state(item);
+        }
+
         items[items_count] = item;
         items_count++;
     }
