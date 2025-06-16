@@ -218,6 +218,16 @@ void write_item_to_ui_state(Item item) {
 
     cJSON *ui_state_json = convert_ui_state_to_cjson_object(ui_state);
     char *ui_state_json_string = cJSON_Print(ui_state_json);
+    save_string_to_path(ui_state_path, ui_state_json_string);
+}
 
+void update_items_location(Item item, int new_x, int new_y) {
+    UIState ui_state = get_ui_state();
+    Item *item_pointer = (Item *)g_hash_table_lookup(ui_state.files, item.path);
+    item_pointer->metadata.saved_location.x = new_x;
+    item_pointer->metadata.saved_location.y = new_y;
+
+    cJSON *ui_state_json = convert_ui_state_to_cjson_object(ui_state);
+    char *ui_state_json_string = cJSON_Print(ui_state_json);
     save_string_to_path(ui_state_path, ui_state_json_string);
 }

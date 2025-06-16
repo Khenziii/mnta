@@ -1,6 +1,6 @@
 #include "glib.h"
 #include "gtk/gtk.h"
-#include "../../filesystem/types.h"
+#include "../../filesystem/filesystem.h"
 
 #define CLICK_THRESHOLD 5
 
@@ -43,7 +43,11 @@ gboolean on_button_release(GtkWidget *widget, GdkEventButton *event, EventContex
     gint total_distance =
         abs(dragging_state.positions.start_global.x - new_x)
         + abs(dragging_state.positions.start_global.y - new_y);
-    if (total_distance < CLICK_THRESHOLD) context->on_click(context->container, context->item);
+    if (total_distance < CLICK_THRESHOLD) {
+        context->on_click(context->container, context->item);
+    } else {
+        update_items_location(context->item, new_x, new_y);
+    }
     
     return TRUE;
 }
