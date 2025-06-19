@@ -19,6 +19,16 @@ AppContext add_file_widget_to_context(GtkWidget *new_file_widget) {
     return context;
 }
 
+AppContext set_previous_directory_navigation(GtkWidget *button) {
+    context.navigation.previous_directory = button;
+    return context;
+}
+
+AppContext set_current_path(char *new_path) {
+    context.current_path = new_path;
+    return context;
+}
+
 void remove_all_file_widgets_from_context() {
     for (int i = 0; i < context.amount_of_current_file_widgets; i++) {
         GtkWidget *widget = context.current_file_widgets[i];

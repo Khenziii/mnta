@@ -9,6 +9,7 @@ typedef struct {
     GtkWidget *container;
     Item item;
     void (*on_click)(GtkWidget *container, Item file);
+    gboolean draggable;
 } EventContext;
 
 typedef struct {
@@ -47,6 +48,8 @@ gboolean on_button_release(GtkWidget *widget, GdkEventButton *event, EventContex
     if (total_distance < CLICK_THRESHOLD) {
         context->on_click(context->container, context->item);
     } else {
+        if (!context->draggable) return TRUE;
+
         update_items_location(context->item, new_x, new_y);
     }
     
@@ -69,19 +72,28 @@ gboolean on_button_destroy(GtkWidget *widget, EventContext *context) {
     return TRUE;
 }
 
-void add_file(GtkWidget *container, Item item, void (*on_click)(GtkWidget *container, Item file)) {
+void add_file(
+    GtkWidget *container,
+    Item item,
+    void (*on_click)(GtkWidget *container, Item file),
+    gboolean draggable,
+    gboolean add_to_context,
+    gboolean add_to_context_as_navigation_back
+) {
     GtkWidget *drag_button = gtk_button_new_with_label(item.name);
     EventContext *context = g_new(EventContext, 1);
     context->container = container;
     context->item = item;
     context->on_click = on_click;
+    context->draggable = draggable;
 
     gtk_widget_set_events(drag_button, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK);
+    g_signal_connect(drag_button, "destroy", G_CALLBACK(on_button_destroy), context);
     g_signal_connect(drag_button, "button-press-event", G_CALLBACK(on_button_press), context);
     g_signal_connect(drag_button, "button-release-event", G_CALLBACK(on_button_release), context);
-    g_signal_connect(drag_button, "motion-notify-event", G_CALLBACK(on_motion_notify), context);
-    g_signal_connect(drag_button, "destroy", G_CALLBACK(on_button_destroy), context);
+    if (draggable) g_signal_connect(drag_button, "motion-notify-event", G_CALLBACK(on_motion_notify), context);
 
     gtk_fixed_put(GTK_FIXED(container), drag_button, item.metadata.saved_location.x, item.metadata.saved_location.y);
-    add_file_widget_to_context(drag_button);
+    if (add_to_context) add_file_widget_to_context(drag_button);
+    if (add_to_context_as_navigation_back) set_previous_directory_navigation(drag_button);
 }

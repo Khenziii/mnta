@@ -63,15 +63,16 @@ Items process_directory(char path[]) {
 
 Items switch_directory(GtkWidget *canvas, char *path) {
     remove_all_file_widgets_from_context();
+    set_current_path(path);
     Items files = process_directory(path);
 
     for (int i = 0; i < files.count; i++) {
         Item item = files.items[i];
 
-        add_file(canvas, item, file_click_handler);
+        add_file(canvas, item, file_click_handler, TRUE, TRUE, FALSE);
     }
 
-    gtk_widget_show_all(canvas);
+    rerender_navigation_buttons(canvas);
 
     return files;
 }
