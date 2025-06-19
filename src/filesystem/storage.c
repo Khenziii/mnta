@@ -61,18 +61,6 @@ static gboolean file_exists(char *path) {
     return exists;
 }
 
-static gboolean directory_exists(char *path) {
-    struct stat info;
-
-    if (stat(path, &info) != 0) {
-        return FALSE;
-    } else if (info.st_mode & S_IFDIR) {
-        return TRUE;
-    } else {
-        return FALSE;
-    }
-}
-
 static void create_file(char *path) {
     FILE *file = fopen(path, "w");
 
@@ -190,6 +178,18 @@ static cJSON* convert_ui_state_to_cjson_object(UIState ui_state) {
 
     cJSON_AddItemToObject(root, "files", files);
     return root;
+}
+
+gboolean directory_exists(char *path) {
+    struct stat info;
+
+    if (stat(path, &info) != 0) {
+        return FALSE;
+    } else if (info.st_mode & S_IFDIR) {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
 }
 
 Settings get_settings() {

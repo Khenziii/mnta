@@ -1,10 +1,12 @@
+#include "gtk/gtk.h"
 #include "dirent.h"
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
-#include "./types.h"
+#include "./filesystem.h"
 #include "../core/core.h"
-#include "../filesystem/filesystem.h"
+#include "../components/components.h"
+#include "../context/context.h"
 
 Items process_directory(char path[]) {
     uint capacity = 10;
@@ -16,15 +18,17 @@ Items process_directory(char path[]) {
     
     dir = opendir(path);
     if (dir == NULL) perror("opendir");
-    
+
     UIState current_ui_state = get_ui_state();
 
     while ((entry = readdir(dir)) != NULL) {
         uint skip_itertaion = strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0;
         if (skip_itertaion) continue;
 
+        char combined_path[PATH_MAX];
+        snprintf(combined_path, sizeof(combined_path), "%s/%s", path, entry->d_name);
         char full_path[PATH_MAX];
-        if (realpath(entry->d_name, full_path) == NULL) {
+        if (realpath(combined_path, full_path) == NULL) {
             perror("realpath");
         }
 
@@ -55,4 +59,19 @@ Items process_directory(char path[]) {
     items_wrapper.count = items_count;
     items_wrapper.items = items;
     return items_wrapper;
+}
+
+Items switch_directory(GtkWidget *canvas, char *path) {
+    remove_all_file_widgets_from_context();
+    Items files = process_directory(path);
+
+    for (int i = 0; i < files.count; i++) {
+        Item item = files.items[i];
+
+        add_file(canvas, item, file_click_handler);
+    }
+
+    gtk_widget_show_all(canvas);
+
+    return files;
 }

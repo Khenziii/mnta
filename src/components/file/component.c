@@ -1,6 +1,7 @@
 #include "glib.h"
 #include "gtk/gtk.h"
 #include "../../filesystem/filesystem.h"
+#include "../../context/context.h"
 
 #define CLICK_THRESHOLD 5
 
@@ -82,4 +83,5 @@ void add_file(GtkWidget *container, Item item, void (*on_click)(GtkWidget *conta
     g_signal_connect(drag_button, "destroy", G_CALLBACK(on_button_destroy), context);
 
     gtk_fixed_put(GTK_FIXED(container), drag_button, item.metadata.saved_location.x, item.metadata.saved_location.y);
+    add_file_widget_to_context(drag_button);
 }
