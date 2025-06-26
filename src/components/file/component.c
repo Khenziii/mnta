@@ -11,21 +11,9 @@ typedef struct {
     void (*on_click)(GtkWidget *container, Item file);
     gboolean draggable;
 } EventContext;
+static DraggingState dragging_state = { FALSE, { 0, 0 } };
 
-typedef struct {
-    Position start_in_button;
-    Position start_global;
-} DraggingStatePositions;
-
-typedef struct {
-    gboolean is_dragging;
-    DraggingStatePositions positions;
-} DraggingState;
-DraggingState dragging_state = { FALSE, { 0, 0 } };
-
-gboolean on_button_press(GtkWidget *widget, GdkEventButton *event, EventContext *context) {
-    GtkWidget *fixed = GTK_WIDGET(context->container);
-
+static gboolean on_button_press(GtkWidget *widget, GdkEventButton *event, EventContext *context) {
     if (event->button == GDK_BUTTON_PRIMARY) {
         dragging_state.positions.start_global.x = event->x_root;
         dragging_state.positions.start_global.y = event->y_root;
@@ -37,7 +25,7 @@ gboolean on_button_press(GtkWidget *widget, GdkEventButton *event, EventContext 
     return TRUE;
 }
 
-gboolean on_button_release(GtkWidget *widget, GdkEventButton *event, EventContext *context) {
+static gboolean on_button_release(GtkWidget *widget, GdkEventButton *event, EventContext *context) {
     dragging_state.is_dragging = FALSE;
 
     int new_x = event->x_root;
@@ -56,7 +44,7 @@ gboolean on_button_release(GtkWidget *widget, GdkEventButton *event, EventContex
     return TRUE;
 }
 
-gboolean on_motion_notify(GtkWidget *widget, GdkEventMotion *event, EventContext *context) {
+static gboolean on_motion_notify(GtkWidget *widget, GdkEventMotion *event, EventContext *context) {
     if (!dragging_state.is_dragging) return FALSE;
 
     GtkWidget *fixed = GTK_WIDGET(context->container);
@@ -67,7 +55,7 @@ gboolean on_motion_notify(GtkWidget *widget, GdkEventMotion *event, EventContext
     return TRUE;
 }
 
-gboolean on_button_destroy(GtkWidget *widget, EventContext *context) {
+static gboolean on_button_destroy(GtkWidget *widget, EventContext *context) {
     g_free(context);
     return TRUE;
 }
