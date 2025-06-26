@@ -3,11 +3,11 @@
 
 static AppContext context;
 
-AppContext get_context() {
+AppContext context_get() {
     return context;
 }
 
-AppContext add_file_widget_to_context(GtkWidget *new_file_widget) {
+AppContext context_add_file_widget(GtkWidget *new_file_widget) {
     size_t new_amount = context.amount_of_current_file_widgets + 1;
 
     GtkWidget **resized_file_widgets = realloc(context.current_file_widgets, new_amount * sizeof(GtkWidget *));
@@ -19,17 +19,7 @@ AppContext add_file_widget_to_context(GtkWidget *new_file_widget) {
     return context;
 }
 
-AppContext set_previous_directory_navigation(GtkWidget *button) {
-    context.navigation.previous_directory = button;
-    return context;
-}
-
-AppContext set_current_path(char *new_path) {
-    context.current_path = new_path;
-    return context;
-}
-
-void remove_all_file_widgets_from_context() {
+void context_remove_all_file_widgets() {
     for (int i = 0; i < context.amount_of_current_file_widgets; i++) {
         GtkWidget *widget = context.current_file_widgets[i];
         gtk_widget_destroy(widget);
@@ -38,4 +28,24 @@ void remove_all_file_widgets_from_context() {
     free(context.current_file_widgets);
     context.current_file_widgets = NULL;
     context.amount_of_current_file_widgets = 0;
+}
+
+AppContext context_set_previous_directory_navigation(GtkWidget *button) {
+    context.navigation.previous_directory = button;
+    return context;
+}
+
+AppContext context_set_current_path(char *new_path) {
+    context.current_path = new_path;
+    return context;
+}
+
+AppContext context_set_canvas(GtkWidget *canvas) {
+    context.canvas = canvas;
+    return context;
+}
+
+AppContext context_set_canvas_container(GtkWidget *canvas_container) {
+    context.canvas_container = canvas_container;
+    return context;
 }

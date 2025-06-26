@@ -15,4 +15,4 @@ extern void add_file(
     gboolean add_to_context_as_navigation_back
 );
 extern void file_click_handler(GtkWidget *container, Item file);
-extern void rerender_navigation_buttons(GtkWidget *container);
+extern void rerender_navigation_buttons();

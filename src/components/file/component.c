@@ -82,6 +82,6 @@ void add_file(
     if (draggable) g_signal_connect(drag_button, "motion-notify-event", G_CALLBACK(on_motion_notify), context);
 
     gtk_fixed_put(GTK_FIXED(container), drag_button, item.metadata.saved_location.x, item.metadata.saved_location.y);
-    if (add_to_context) add_file_widget_to_context(drag_button);
-    if (add_to_context_as_navigation_back) set_previous_directory_navigation(drag_button);
+    if (add_to_context) context_add_file_widget(drag_button);
+    if (add_to_context_as_navigation_back) context_set_previous_directory_navigation(drag_button);
 }

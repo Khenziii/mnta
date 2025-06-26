@@ -6,10 +6,14 @@ typedef struct AppContext {
     size_t amount_of_current_file_widgets;
     Navigation navigation;
     char *current_path;
+    GtkWidget *canvas_container;
+    GtkWidget *canvas;
 } AppContext;
 
-extern AppContext get_context();
-extern AppContext add_file_widget_to_context(GtkWidget *new_file_widget);
-extern AppContext set_previous_directory_navigation(GtkWidget *button);
-extern AppContext set_current_path(char *new_path);
-extern void remove_all_file_widgets_from_context();
+extern AppContext context_get();
+extern AppContext context_add_file_widget(GtkWidget *new_file_widget);
+extern AppContext context_set_previous_directory_navigation(GtkWidget *button);
+extern AppContext context_set_current_path(char *new_path);
+extern AppContext context_set_canvas(GtkWidget *canvas);
+extern AppContext context_set_canvas_container(GtkWidget *canvas_container);
+extern void context_remove_all_file_widgets();

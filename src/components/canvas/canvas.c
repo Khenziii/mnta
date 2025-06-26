@@ -1,5 +1,6 @@
 #include <gtk/gtk.h>
 #include "../../utils/utils.h"
+#include "../../context/context.h"
 
 typedef struct {
     GtkWidget *canvas;
@@ -40,10 +41,10 @@ static gboolean on_motion_notify(GtkWidget *widget, GdkEventMotion *event, Event
 
 GtkWidget* setup_canvas(GtkWidget *window) {
     GtkWidget *canvas_container = gtk_fixed_new();
-    GtkWidget *container = gtk_fixed_new();
+    GtkWidget *canvas = gtk_fixed_new();
     EventContext *context = g_new(EventContext, 1);
     context->canvas_container = canvas_container;
-    context->canvas = container;
+    context->canvas = canvas;
 
     gtk_widget_set_events(canvas_container, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK);
     g_signal_connect(canvas_container, "button-press-event", G_CALLBACK(on_button_press), context);
@@ -51,11 +52,13 @@ GtkWidget* setup_canvas(GtkWidget *window) {
     g_signal_connect(canvas_container, "motion-notify-event", G_CALLBACK(on_motion_notify), context);
 
     gtk_widget_set_has_window(canvas_container, TRUE);
-    gtk_widget_set_visible(container, TRUE);
     gtk_widget_show_all(canvas_container);
 
-    gtk_container_add(GTK_CONTAINER(canvas_container), container);
+    gtk_container_add(GTK_CONTAINER(canvas_container), canvas);
     gtk_container_add(GTK_CONTAINER(window), canvas_container);
 
-    return container;
+    context_set_canvas(canvas);
+    context_set_canvas_container(canvas_container);
+
+    return canvas;
 }

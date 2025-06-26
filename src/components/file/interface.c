@@ -1,7 +1,7 @@
 #include "../../context/context.h"
 
 static void add_go_back_button(GtkWidget *container) {
-    AppContext context = get_context();
+    AppContext context = context_get();
     char previous_path[PATH_MAX];
     sprintf(previous_path, "%s/..", context.current_path);
 
@@ -14,11 +14,11 @@ static void add_go_back_button(GtkWidget *container) {
     add_file(container, item, file_click_handler, FALSE, FALSE, TRUE);
 }
 
-void rerender_navigation_buttons(GtkWidget *container) {
-    AppContext context = get_context();
+void rerender_navigation_buttons() {
+    AppContext context = context_get();
     if (context.navigation.previous_directory) gtk_widget_destroy(context.navigation.previous_directory);
 
-    add_go_back_button(container);
+    add_go_back_button(context.canvas_container);
 
-    gtk_widget_show_all(container);
+    gtk_widget_show_all(context.canvas_container);
 }
