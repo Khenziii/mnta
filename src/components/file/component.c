@@ -11,7 +11,7 @@ typedef struct {
     void (*on_click)(GtkWidget *container, Item file);
     gboolean draggable;
 } EventContext;
-static DraggingState dragging_state = { FALSE, { 0, 0 } };
+static DraggingState dragging_state = { FALSE, { { 0, 0 }, { 0, 0 } } };
 
 static gboolean on_button_press(GtkWidget *widget, GdkEventButton *event, EventContext *context) {
     if (event->button == GDK_BUTTON_PRIMARY) {

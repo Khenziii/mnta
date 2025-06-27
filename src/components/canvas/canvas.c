@@ -6,13 +6,19 @@ typedef struct {
     GtkWidget *canvas;
     GtkWidget *canvas_container;
 } EventContext;
-static DraggingState dragging_state = { FALSE, { 0, 0 } };
+static DraggingState dragging_state = { FALSE, { { 0, 0 }, { 0, 0 } } };
 
 static gboolean on_button_press(GtkWidget *widget, GdkEventButton *event, EventContext *context) {
+    gtk_widget_translate_coordinates(
+        context->canvas,
+        context->canvas_container,
+        0,
+        0,
+        &dragging_state.positions.start_in_button.x,
+        &dragging_state.positions.start_in_button.y
+    );
     dragging_state.positions.start_global.x = event->x_root;
     dragging_state.positions.start_global.y = event->y_root;
-    dragging_state.positions.start_in_button.x = event->x;
-    dragging_state.positions.start_in_button.y = event->y;
     dragging_state.is_dragging = TRUE;
 
     return TRUE;
@@ -30,12 +36,12 @@ static gboolean on_button_release(GtkWidget *widget, GdkEventButton *event, Even
 static gboolean on_motion_notify(GtkWidget *widget, GdkEventMotion *event, EventContext *context) {
     if (!dragging_state.is_dragging) return FALSE;
 
-    GtkWidget *canvas_container = GTK_WIDGET(context->canvas_container);
+    gint delta_x = event->x_root - dragging_state.positions.start_global.x;
+    gint delta_y = event->y_root - dragging_state.positions.start_global.y;
+    gint new_x = dragging_state.positions.start_in_button.x + delta_x;
+    gint new_y = dragging_state.positions.start_in_button.y + delta_y;
 
-    gint new_x = event->x_root - dragging_state.positions.start_in_button.x;
-    gint new_y = event->y_root - dragging_state.positions.start_in_button.y;
-
-    gtk_fixed_move(GTK_FIXED(canvas_container), context->canvas, new_x, new_y);
+    gtk_fixed_move(GTK_FIXED(context->canvas_container), context->canvas, new_x, new_y);
     return TRUE;
 }
 
