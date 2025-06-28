@@ -15,10 +15,12 @@ static DraggingState dragging_state = { FALSE, { { 0, 0 }, { 0, 0 } } };
 
 static gboolean on_button_press(GtkWidget *widget, GdkEventButton *event, EventContext *context) {
     if (event->button == GDK_BUTTON_PRIMARY) {
+        AppContext app_context = context_get();
+
         dragging_state.positions.start_global.x = event->x_root;
         dragging_state.positions.start_global.y = event->y_root;
-        dragging_state.positions.start_in_button.x = event->x;
-        dragging_state.positions.start_in_button.y = event->y;
+        dragging_state.positions.start_in_button.x = event->x + app_context.current_canvas_position->x;
+        dragging_state.positions.start_in_button.y = event->y + app_context.current_canvas_position->y;
         dragging_state.is_dragging = TRUE;
     }
 
@@ -28,8 +30,10 @@ static gboolean on_button_press(GtkWidget *widget, GdkEventButton *event, EventC
 static gboolean on_button_release(GtkWidget *widget, GdkEventButton *event, EventContext *context) {
     dragging_state.is_dragging = FALSE;
 
-    int new_x = event->x_root;
-    int new_y = event->y_root;
+    AppContext app_context = context_get();
+    int new_x = event->x_root - dragging_state.positions.start_in_button.x;
+    int new_y = event->y_root - dragging_state.positions.start_in_button.y;
+
     gint total_distance =
         abs(dragging_state.positions.start_global.x - new_x)
         + abs(dragging_state.positions.start_global.y - new_y);

@@ -3,6 +3,14 @@
 
 static AppContext context;
 
+// This has to be called before using any other methods of the module safely.
+AppContext context_setup_default() {
+    context.current_canvas_position = g_new(Position, 1);
+    context.current_canvas_position->x = 0;
+    context.current_canvas_position->y = 0;
+    return context;
+}
+
 AppContext context_get() {
     return context;
 }
@@ -32,6 +40,11 @@ void context_remove_all_file_widgets() {
 
 AppContext context_set_previous_directory_navigation(GtkWidget *button) {
     context.navigation.previous_directory = button;
+    return context;
+}
+
+AppContext context_set_current_canvas_position(Position *canvas_position) {
+    context.current_canvas_position = canvas_position;
     return context;
 }
 

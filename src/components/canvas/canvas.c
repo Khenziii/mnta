@@ -1,12 +1,25 @@
 #include <gtk/gtk.h>
 #include "../../utils/utils.h"
 #include "../../context/context.h"
+#include "glib.h"
 
 typedef struct {
     GtkWidget *canvas;
     GtkWidget *canvas_container;
 } EventContext;
 static DraggingState dragging_state = { FALSE, { { 0, 0 }, { 0, 0 } } };
+
+static Position *calculate_canvas_position(gint x, gint y) {
+    gint delta_x = x - dragging_state.positions.start_global.x;
+    gint delta_y = y - dragging_state.positions.start_global.y;
+    gint new_x = dragging_state.positions.start_in_button.x + delta_x;
+    gint new_y = dragging_state.positions.start_in_button.y + delta_y;
+
+    Position *new_canvas_position = g_new(Position, 1);
+    new_canvas_position->x = new_x;
+    new_canvas_position->y = new_y;
+    return new_canvas_position;
+}
 
 static gboolean on_button_press(GtkWidget *widget, GdkEventButton *event, EventContext *context) {
     gtk_widget_translate_coordinates(
@@ -27,21 +40,22 @@ static gboolean on_button_press(GtkWidget *widget, GdkEventButton *event, EventC
 static gboolean on_button_release(GtkWidget *widget, GdkEventButton *event, EventContext *context) {
     dragging_state.is_dragging = FALSE;
 
-    int new_x = event->x_root;
-    int new_y = event->y_root;
-    // TODO: save new coordinates and use them when moving files around
+    Position *canvas_position = calculate_canvas_position(event->x_root, event->y_root);
+    context_set_current_canvas_position(canvas_position);
+
     return TRUE;
 }
 
 static gboolean on_motion_notify(GtkWidget *widget, GdkEventMotion *event, EventContext *context) {
     if (!dragging_state.is_dragging) return FALSE;
 
-    gint delta_x = event->x_root - dragging_state.positions.start_global.x;
-    gint delta_y = event->y_root - dragging_state.positions.start_global.y;
-    gint new_x = dragging_state.positions.start_in_button.x + delta_x;
-    gint new_y = dragging_state.positions.start_in_button.y + delta_y;
-
-    gtk_fixed_move(GTK_FIXED(context->canvas_container), context->canvas, new_x, new_y);
+    Position *canvas_position = calculate_canvas_position(event->x_root, event->y_root);
+    gtk_fixed_move(
+        GTK_FIXED(context->canvas_container),
+        context->canvas,
+        canvas_position->x,
+        canvas_position->y
+    );
     return TRUE;
 }
 

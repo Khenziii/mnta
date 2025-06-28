@@ -21,6 +21,7 @@ static void activate(GtkApplication *app, gpointer path) {
 
     setup_canvas(window);
 
+    context_setup_default();
     AppContext context = context_get();
 
     switch_directory(context.canvas, path);
