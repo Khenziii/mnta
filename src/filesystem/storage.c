@@ -118,7 +118,7 @@ static void add_default_settings(char *path) {
 }
 
 static void default_ui_state_generator(cJSON *json_object) {
-    cJSON *files = cJSON_CreateArray();
+    cJSON *files = cJSON_CreateObject();
     cJSON_AddItemToObject(json_object, "files", files);
 }
 

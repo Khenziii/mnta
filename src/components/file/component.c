@@ -11,37 +11,29 @@ typedef struct {
     void (*on_click)(GtkWidget *container, Item file);
     gboolean draggable;
 } EventContext;
+static DraggingState dragging_state = { FALSE, { { 0, 0 }, { 0, 0 } } };
 
-typedef struct {
-    Position start_in_button;
-    Position start_global;
-} DraggingStatePositions;
-
-typedef struct {
-    gboolean is_dragging;
-    DraggingStatePositions positions;
-} DraggingState;
-DraggingState dragging_state = { FALSE, { 0, 0 } };
-
-gboolean on_button_press(GtkWidget *widget, GdkEventButton *event, EventContext *context) {
-    GtkWidget *fixed = GTK_WIDGET(context->container);
-
+static gboolean on_button_press(GtkWidget *widget, GdkEventButton *event, EventContext *context) {
     if (event->button == GDK_BUTTON_PRIMARY) {
+        AppContext app_context = context_get();
+
         dragging_state.positions.start_global.x = event->x_root;
         dragging_state.positions.start_global.y = event->y_root;
-        dragging_state.positions.start_in_button.x = event->x;
-        dragging_state.positions.start_in_button.y = event->y;
+        dragging_state.positions.start_in_button.x = event->x + app_context.current_canvas_position->x;
+        dragging_state.positions.start_in_button.y = event->y + app_context.current_canvas_position->y;
         dragging_state.is_dragging = TRUE;
     }
 
     return TRUE;
 }
 
-gboolean on_button_release(GtkWidget *widget, GdkEventButton *event, EventContext *context) {
+static gboolean on_button_release(GtkWidget *widget, GdkEventButton *event, EventContext *context) {
     dragging_state.is_dragging = FALSE;
 
-    int new_x = event->x_root;
-    int new_y = event->y_root;
+    AppContext app_context = context_get();
+    int new_x = event->x_root - dragging_state.positions.start_in_button.x;
+    int new_y = event->y_root - dragging_state.positions.start_in_button.y;
+
     gint total_distance =
         abs(dragging_state.positions.start_global.x - new_x)
         + abs(dragging_state.positions.start_global.y - new_y);
@@ -56,7 +48,7 @@ gboolean on_button_release(GtkWidget *widget, GdkEventButton *event, EventContex
     return TRUE;
 }
 
-gboolean on_motion_notify(GtkWidget *widget, GdkEventMotion *event, EventContext *context) {
+static gboolean on_motion_notify(GtkWidget *widget, GdkEventMotion *event, EventContext *context) {
     if (!dragging_state.is_dragging) return FALSE;
 
     GtkWidget *fixed = GTK_WIDGET(context->container);
@@ -67,7 +59,7 @@ gboolean on_motion_notify(GtkWidget *widget, GdkEventMotion *event, EventContext
     return TRUE;
 }
 
-gboolean on_button_destroy(GtkWidget *widget, EventContext *context) {
+static gboolean on_button_destroy(GtkWidget *widget, EventContext *context) {
     g_free(context);
     return TRUE;
 }
@@ -94,6 +86,6 @@ void add_file(
     if (draggable) g_signal_connect(drag_button, "motion-notify-event", G_CALLBACK(on_motion_notify), context);
 
     gtk_fixed_put(GTK_FIXED(container), drag_button, item.metadata.saved_location.x, item.metadata.saved_location.y);
-    if (add_to_context) add_file_widget_to_context(drag_button);
-    if (add_to_context_as_navigation_back) set_previous_directory_navigation(drag_button);
+    if (add_to_context) context_add_file_widget(drag_button);
+    if (add_to_context_as_navigation_back) context_set_previous_directory_navigation(drag_button);
 }

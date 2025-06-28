@@ -4,6 +4,7 @@
 #include "./styles/styles.h"
 #include "./components/components.h"
 #include "./filesystem/filesystem.h"
+#include "./context/context.h"
 
 static void activate(GtkApplication *app, gpointer path) {
     GtkWidget *window = gtk_application_window_new(app);
@@ -18,8 +19,12 @@ static void activate(GtkApplication *app, gpointer path) {
     gtk_css_provider_load_from_data(css_provider, main_window, -1, NULL);
     gtk_style_context_add_provider_for_screen(screen, GTK_STYLE_PROVIDER(css_provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
-    GtkWidget *canvas = setup_canvas(window);
-    switch_directory(canvas, path);
+    setup_canvas(window);
+
+    context_setup_default();
+    AppContext context = context_get();
+
+    switch_directory(context.canvas, path);
 }
 
 int main(int argc, char *argv[]) {
