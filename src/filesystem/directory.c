@@ -61,7 +61,9 @@ Items process_directory(char path[]) {
     return items_wrapper;
 }
 
-Items switch_directory(GtkWidget *canvas, char *path) {
+Items switch_directory(char *path) {
+    AppContext context = context_get();
+
     context_remove_all_file_widgets();
     context_set_current_path(path);
     Items files = process_directory(path);
@@ -69,7 +71,7 @@ Items switch_directory(GtkWidget *canvas, char *path) {
     for (int i = 0; i < files.count; i++) {
         Item item = files.items[i];
 
-        add_file(canvas, item, file_click_handler, TRUE, TRUE, FALSE);
+        add_file(context.canvas, item, file_click_handler, TRUE, TRUE, FALSE);
     }
 
     rerender_navigation_buttons();

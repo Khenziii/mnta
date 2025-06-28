@@ -1,5 +1,6 @@
 #include "gtk/gtk.h"
 #include "./context.h"
+#include "../utils/utils.h"
 
 static AppContext context;
 
@@ -36,6 +37,17 @@ void context_remove_all_file_widgets() {
     free(context.current_file_widgets);
     context.current_file_widgets = NULL;
     context.amount_of_current_file_widgets = 0;
+}
+
+AppContext context_set_is_editor_currently_open(gboolean *is_editor_currently_open) {
+    if (is_editor_currently_open) {
+        hide_navigation();
+    } else {
+        show_navigation();
+    }
+
+    context.is_editor_currently_open = is_editor_currently_open;
+    return context;
 }
 
 AppContext context_set_previous_directory_navigation(GtkWidget *button) {

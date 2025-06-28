@@ -2,6 +2,7 @@
 #include "stdio.h"
 #include "vte/vte.h"
 #include "../../filesystem/filesystem.h"
+#include "../../context/context.h"
 
 GtkWidget *container;
 GtkWidget *terminal;
@@ -17,10 +18,15 @@ static void update_terminal_size_to_fit_container() {
 static void on_terminal_exit(VteTerminal *passed_terminal, int status, gpointer user_data) {
     g_signal_handlers_disconnect_by_func(container, update_terminal_size_to_fit_container, NULL);
     gtk_container_remove(GTK_CONTAINER(container), GTK_WIDGET(terminal));
+
+    context_set_is_editor_currently_open(FALSE);
 }
 
-void spawn_new_terminal(GtkWidget *passed_container, Item file) {
-    container = passed_container;
+void spawn_new_terminal(Item file) {
+    AppContext context = context_get();
+    context_set_is_editor_currently_open((gboolean *)TRUE);
+
+    container = context.canvas_container;
     terminal = vte_terminal_new();
     vte_terminal = VTE_TERMINAL(terminal);
 

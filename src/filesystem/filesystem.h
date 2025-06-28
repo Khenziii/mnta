@@ -1,8 +1,7 @@
-#include "gtk/gtk.h"
 #include "./types.h"
 
 extern Items process_directory(char path[]);
-extern Items switch_directory(GtkWidget *canvas, char *path);
+extern Items switch_directory(char *path);
 extern void write_item_to_ui_state(Item item);
 extern void update_items_location(Item item, int new_x, int new_y);
 extern UIState get_ui_state();

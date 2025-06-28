@@ -15,3 +15,6 @@ typedef struct {
     gboolean is_dragging;
     DraggingStatePositions positions;
 } DraggingState;
+
+extern void hide_navigation();
+extern void show_navigation();

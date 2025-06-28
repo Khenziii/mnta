@@ -1,6 +1,5 @@
 #include "glib.h"
 #include <gtk/gtk.h>
-#include <stdio.h>
 #include "./styles/styles.h"
 #include "./components/components.h"
 #include "./filesystem/filesystem.h"
@@ -15,16 +14,13 @@ static void activate(GtkApplication *app, gpointer path) {
 
     GdkScreen *screen = gtk_widget_get_screen(window);
 
-    GtkCssProvider *css_provider = gtk_css_provider_new();
-    gtk_css_provider_load_from_data(css_provider, main_window, -1, NULL);
+    GtkCssProvider *css_provider = css_get_provider();
     gtk_style_context_add_provider_for_screen(screen, GTK_STYLE_PROVIDER(css_provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
     setup_canvas(window);
-
     context_setup_default();
-    AppContext context = context_get();
 
-    switch_directory(context.canvas, path);
+    switch_directory(path);
 }
 
 int main(int argc, char *argv[]) {

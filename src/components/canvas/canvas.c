@@ -21,7 +21,7 @@ static Position *calculate_canvas_position(gint x, gint y) {
     return new_canvas_position;
 }
 
-static gboolean on_button_press(GtkWidget *widget, GdkEventButton *event, EventContext *context) {
+static gboolean on_press(GtkWidget *widget, GdkEventButton *event, EventContext *context) {
     gtk_widget_translate_coordinates(
         context->canvas,
         context->canvas_container,
@@ -37,7 +37,7 @@ static gboolean on_button_press(GtkWidget *widget, GdkEventButton *event, EventC
     return TRUE;
 }
 
-static gboolean on_button_release(GtkWidget *widget, GdkEventButton *event, EventContext *context) {
+static gboolean on_release(GtkWidget *widget, GdkEventButton *event, EventContext *context) {
     dragging_state.is_dragging = FALSE;
 
     Position *canvas_position = calculate_canvas_position(event->x_root, event->y_root);
@@ -67,8 +67,8 @@ GtkWidget* setup_canvas(GtkWidget *window) {
     context->canvas = canvas;
 
     gtk_widget_set_events(canvas_container, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK);
-    g_signal_connect(canvas_container, "button-press-event", G_CALLBACK(on_button_press), context);
-    g_signal_connect(canvas_container, "button-release-event", G_CALLBACK(on_button_release), context);
+    g_signal_connect(canvas_container, "button-press-event", G_CALLBACK(on_press), context);
+    g_signal_connect(canvas_container, "button-release-event", G_CALLBACK(on_release), context);
     g_signal_connect(canvas_container, "motion-notify-event", G_CALLBACK(on_motion_notify), context);
 
     gtk_widget_set_has_window(canvas_container, TRUE);
