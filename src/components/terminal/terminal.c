@@ -57,6 +57,6 @@ void spawn_new_terminal(Item file) {
 
     update_terminal_size_to_fit_container();
     gtk_fixed_put(GTK_FIXED(container), terminal, 0, 0);
-    gtk_widget_show_all(container);
+    gtk_widget_show(terminal);
     gtk_widget_grab_focus(terminal);
 }

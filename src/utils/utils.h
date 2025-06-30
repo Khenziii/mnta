@@ -25,3 +25,5 @@ typedef struct {
 extern void hide_navigation();
 extern void show_navigation();
 extern void free_file_widget(FileWidget *file_widget);
+extern void show_navigation_hints();
+extern void hide_navigation_hints();

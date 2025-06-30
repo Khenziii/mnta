@@ -20,5 +20,7 @@ void rerender_navigation_buttons() {
 
     add_go_back_button(context.canvas_container);
 
-    gtk_widget_show_all(context.canvas_container);
+    context = context_get();
+    gtk_widget_show(context.navigation.previous_directory->container);
+    gtk_widget_show(context.navigation.previous_directory->button);
 }

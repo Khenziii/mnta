@@ -72,7 +72,8 @@ GtkWidget* setup_canvas(GtkWidget *window) {
     g_signal_connect(canvas_container, "motion-notify-event", G_CALLBACK(on_motion_notify), context);
 
     gtk_widget_set_has_window(canvas_container, TRUE);
-    gtk_widget_show_all(canvas_container);
+    gtk_widget_show(canvas_container);
+    gtk_widget_show(canvas);
 
     gtk_container_add(GTK_CONTAINER(canvas_container), canvas);
     gtk_container_add(GTK_CONTAINER(window), canvas_container);

@@ -80,10 +80,14 @@ void add_file(
     GtkWidget *button_container = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
     GtkWidget *button = gtk_button_new_with_label(item.name);
     GtkWidget *label = gtk_label_new(NULL);
-    gtk_label_set_markup(GTK_LABEL(label), "<b>A</b>AA");
+
+    gtk_widget_show(button_container);
+    gtk_widget_show(button);
 
     gtk_box_pack_start(GTK_BOX(button_container), button, TRUE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(button_container), label, TRUE, TRUE, 0);
+
+    gtk_label_set_markup(GTK_LABEL(label), "<b>A</b>AA");
 
     EventContext *context = g_new(EventContext, 1);
     context->container = container;

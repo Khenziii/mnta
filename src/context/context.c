@@ -9,6 +9,10 @@ AppContext context_setup_default() {
     context.current_canvas_position = g_new(Position, 1);
     context.current_canvas_position->x = 0;
     context.current_canvas_position->y = 0;
+    context.navigation_hints = g_new(NavigationHints, 1);
+    context.navigation_hints->currently_entered = "";
+    context.navigation_hints->are_currently_shown = g_new(gboolean, 1);
+    *(context.navigation_hints->are_currently_shown) = FALSE;
     return context;
 }
 
@@ -71,5 +75,16 @@ AppContext context_set_canvas(GtkWidget *canvas) {
 
 AppContext context_set_canvas_container(GtkWidget *canvas_container) {
     context.canvas_container = canvas_container;
+    return context;
+}
+
+AppContext context_set_navigation_hints_are_currently_shown(gboolean *are_currently_shown) {
+    if (*are_currently_shown) {
+        show_navigation_hints();
+    } else {
+        hide_navigation_hints();
+    }
+
+    context.navigation_hints->are_currently_shown = are_currently_shown;
     return context;
 }
