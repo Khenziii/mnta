@@ -92,17 +92,21 @@ void add_file(
     context->on_click = on_click;
     context->draggable = draggable;
 
-    gtk_widget_set_can_focus(button, TRUE);
-    gtk_widget_grab_focus(button);
-
-    gtk_widget_set_events(button, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_KEY_PRESS_MASK);
+    gtk_widget_set_events(button, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK);
     g_signal_connect(button, "destroy", G_CALLBACK(on_destroy), context);
     g_signal_connect(button, "button-press-event", G_CALLBACK(on_press), context);
     g_signal_connect(button, "button-release-event", G_CALLBACK(on_release), context);
-    /* g_signal_connect(button, "key-press-event", G_CALLBACK(on_key_press), context); */
     if (draggable) g_signal_connect(button, "motion-notify-event", G_CALLBACK(on_motion_notify), context);
 
     gtk_fixed_put(GTK_FIXED(container), button_container, item.metadata.saved_location.x, item.metadata.saved_location.y);
-    if (add_to_context) context_add_file_widget(button_container);
-    if (add_to_context_as_navigation_back) context_set_previous_directory_navigation(button_container);
+
+    if (add_to_context || add_to_context_as_navigation_back) {
+        FileWidget *file_widget = g_new(FileWidget, 1);
+        file_widget->button=button;
+        file_widget->label=label;
+        file_widget->container=button_container;
+
+        if (add_to_context) context_add_file_widget(file_widget);
+        if (add_to_context_as_navigation_back) context_set_previous_directory_navigation(file_widget);
+    }
 }

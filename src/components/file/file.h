@@ -3,7 +3,7 @@
 #include "../../filesystem/types.h"
 
 typedef struct Navigation {
-    GtkWidget *previous_directory;
+    FileWidget *previous_directory;
 } Navigation;
 
 extern void add_file(

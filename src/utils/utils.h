@@ -1,5 +1,11 @@
 #pragma once
-#include "glib.h"
+#include "gtk/gtk.h"
+
+typedef struct FileWidget {
+    GtkWidget *button;
+    GtkWidget *label;
+    GtkWidget *container;
+} FileWidget;
 
 typedef struct Position {
     int x;
@@ -18,3 +24,4 @@ typedef struct {
 
 extern void hide_navigation();
 extern void show_navigation();
+extern void free_file_widget(FileWidget *file_widget);

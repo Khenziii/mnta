@@ -16,7 +16,7 @@ static void add_go_back_button(GtkWidget *container) {
 
 void rerender_navigation_buttons() {
     AppContext context = context_get();
-    if (context.navigation.previous_directory) gtk_widget_destroy(context.navigation.previous_directory);
+    if (context.navigation.previous_directory) free_file_widget(context.navigation.previous_directory);
 
     add_go_back_button(context.canvas_container);
 

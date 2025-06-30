@@ -2,7 +2,7 @@
 #include "../components/components.h"
 
 typedef struct AppContext {
-    GtkWidget **current_file_widgets;
+    FileWidget **current_file_widgets;
     size_t amount_of_current_file_widgets;
     Navigation navigation;
     char *current_path;
@@ -14,8 +14,8 @@ typedef struct AppContext {
 
 extern AppContext context_setup_default();
 extern AppContext context_get();
-extern AppContext context_add_file_widget(GtkWidget *new_file_widget);
-extern AppContext context_set_previous_directory_navigation(GtkWidget *button);
+extern AppContext context_add_file_widget(FileWidget *new_file_widget);
+extern AppContext context_set_previous_directory_navigation(FileWidget *file_widget);
 extern AppContext context_set_current_canvas_position(Position *canvas_position);
 extern AppContext context_set_current_path(char *new_path);
 extern AppContext context_set_canvas(GtkWidget *canvas);

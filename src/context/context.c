@@ -16,10 +16,9 @@ AppContext context_get() {
     return context;
 }
 
-AppContext context_add_file_widget(GtkWidget *new_file_widget) {
+AppContext context_add_file_widget(FileWidget *new_file_widget) {
     size_t new_amount = context.amount_of_current_file_widgets + 1;
-
-    GtkWidget **resized_file_widgets = realloc(context.current_file_widgets, new_amount * sizeof(GtkWidget *));
+    FileWidget **resized_file_widgets = realloc(context.current_file_widgets, new_amount * sizeof(FileWidget *));
 
     resized_file_widgets[context.amount_of_current_file_widgets] = new_file_widget;
     context.current_file_widgets = resized_file_widgets;
@@ -30,8 +29,8 @@ AppContext context_add_file_widget(GtkWidget *new_file_widget) {
 
 void context_remove_all_file_widgets() {
     for (int i = 0; i < context.amount_of_current_file_widgets; i++) {
-        GtkWidget *widget = context.current_file_widgets[i];
-        gtk_widget_destroy(widget);
+        FileWidget *file_widget = context.current_file_widgets[i];
+        free_file_widget(file_widget);
     }
 
     free(context.current_file_widgets);
@@ -50,8 +49,8 @@ AppContext context_set_is_editor_currently_open(gboolean *is_editor_currently_op
     return context;
 }
 
-AppContext context_set_previous_directory_navigation(GtkWidget *button) {
-    context.navigation.previous_directory = button;
+AppContext context_set_previous_directory_navigation(FileWidget *file_widget) {
+    context.navigation.previous_directory = file_widget;
     return context;
 }
 
