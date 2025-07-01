@@ -10,7 +10,6 @@ static gboolean on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer dat
     if (context.is_editor_currently_open) return FALSE;
 
     char *key = g_ascii_strup(gdk_keyval_name(event->keyval), -1);
-    g_print("key: %s\n", key);
     if (strcmp(key, "F") == 0) {
         gboolean *are_navigation_hints_currently_shown = context.navigation_hints->are_currently_shown;
         gboolean *negated = g_new(gboolean, 1);

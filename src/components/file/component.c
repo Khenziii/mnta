@@ -87,8 +87,6 @@ void add_file(
     gtk_box_pack_start(GTK_BOX(button_container), button, TRUE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(button_container), label, TRUE, TRUE, 0);
 
-    gtk_label_set_markup(GTK_LABEL(label), "<b>A</b>AA");
-
     EventContext *context = g_new(EventContext, 1);
     context->container = container;
     context->button_container = button_container;
