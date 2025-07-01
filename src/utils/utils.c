@@ -1,6 +1,5 @@
 #include <math.h>
 #include "../context/context.h"
-#include "unistd.h"
 
 #define VALID_HINT_KEYS "QWERTYUIOPASDGZXCVBNM"
 
@@ -133,7 +132,7 @@ char** get_navigation_hint_strings(gint amount) {
 
 void show_navigation_hints() {
     AppContext context = context_get();
-    char **navigation_hint_strings = get_navigation_hint_strings(context.amount_of_current_file_widgets);
+    char **navigation_hint_strings = get_navigation_hint_strings(context.amount_of_current_file_widgets + 1);
     for (int i = 0; i < context.amount_of_current_file_widgets; i++) {
         FileWidget *file_widget = context.current_file_widgets[i];
         GtkWidget *navigation_hint = file_widget->label;
@@ -144,6 +143,7 @@ void show_navigation_hints() {
 
     GtkWidget *previous_dir_navigation_hint = context.navigation.previous_directory->label;
     gtk_widget_show(previous_dir_navigation_hint);
+    gtk_label_set_markup(GTK_LABEL(previous_dir_navigation_hint), navigation_hint_strings[context.amount_of_current_file_widgets]);
 }
 
 void hide_navigation_hints() {

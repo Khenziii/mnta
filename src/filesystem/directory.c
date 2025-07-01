@@ -1,4 +1,3 @@
-#include "gtk/gtk.h"
 #include "dirent.h"
 #include "stdio.h"
 #include "stdlib.h"
@@ -75,6 +74,9 @@ Items switch_directory(char *path) {
     }
 
     rerender_navigation_buttons();
+    gboolean *are_hints_shown = g_new(gboolean, 1);
+    *are_hints_shown = FALSE;
+    context_set_navigation_hints_are_currently_shown(are_hints_shown);
 
     return files;
 }
