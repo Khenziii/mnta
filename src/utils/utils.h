@@ -1,16 +1,28 @@
 #pragma once
 #include "gtk/gtk.h"
 
-typedef struct FileWidget {
-    GtkWidget *button;
-    GtkWidget *label;
-    GtkWidget *container;
-} FileWidget;
-
 typedef struct Position {
     int x;
     int y;
 } Position;
+
+typedef struct Metadata {
+    Position saved_location;
+} Metadata;
+
+typedef struct Item {
+    Metadata metadata;
+    char *path;
+    // Last segment of path.
+    char *name;
+} Item;
+
+typedef struct FileWidget {
+    GtkWidget *button;
+    GtkWidget *label;
+    GtkWidget *container;
+    Item *item;
+} FileWidget;
 
 typedef struct {
     Position start_in_button;

@@ -1,5 +1,5 @@
 #include "assert.h"
-#include "./types.h"
+#include "../utils/utils.h"
 
 // TODO: support changing this via config.
 #define FILES_PER_ROW 5

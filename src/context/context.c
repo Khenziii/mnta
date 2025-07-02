@@ -10,7 +10,7 @@ AppContext context_setup_default() {
     context.current_canvas_position->x = 0;
     context.current_canvas_position->y = 0;
     context.navigation_hints = g_new(NavigationHints, 1);
-    context.navigation_hints->currently_entered = "";
+    context.navigation_hints->currently_entered = g_new(char, 1);
     context.navigation_hints->are_currently_shown = g_new(gboolean, 1);
     *(context.navigation_hints->are_currently_shown) = FALSE;
     return context;

@@ -1,13 +1,6 @@
 #pragma once
 #include "./glib.h"
-#include "../core/types.h"
-
-typedef struct Item {
-    Metadata metadata;
-    char *path;
-    // Last segment of path.
-    char *name;
-} Item;
+#include "../utils/utils.h"
 
 typedef struct Items {
     Item *items;

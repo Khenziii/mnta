@@ -107,6 +107,9 @@ void add_file(
         file_widget->button=button;
         file_widget->label=label;
         file_widget->container=button_container;
+        Item *item_buffer = g_new(Item, 1);
+        *item_buffer = item;
+        file_widget->item=item_buffer;
 
         if (add_to_context) context_add_file_widget(file_widget);
         if (add_to_context_as_navigation_back) context_set_previous_directory_navigation(file_widget);
