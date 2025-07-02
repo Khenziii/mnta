@@ -1,4 +1,3 @@
-#include "gtk/gtk.h"
 #include "dirent.h"
 #include "stdio.h"
 #include "stdlib.h"
@@ -61,7 +60,9 @@ Items process_directory(char path[]) {
     return items_wrapper;
 }
 
-Items switch_directory(GtkWidget *canvas, char *path) {
+Items switch_directory(char *path) {
+    AppContext context = context_get();
+
     context_remove_all_file_widgets();
     context_set_current_path(path);
     Items files = process_directory(path);
@@ -69,10 +70,13 @@ Items switch_directory(GtkWidget *canvas, char *path) {
     for (int i = 0; i < files.count; i++) {
         Item item = files.items[i];
 
-        add_file(canvas, item, file_click_handler, TRUE, TRUE, FALSE);
+        add_file(context.canvas, item, file_click_handler, TRUE, TRUE, FALSE);
     }
 
     rerender_navigation_buttons();
+    gboolean *are_hints_shown = g_new(gboolean, 1);
+    *are_hints_shown = FALSE;
+    context_set_navigation_hints_are_currently_shown(are_hints_shown);
 
     return files;
 }

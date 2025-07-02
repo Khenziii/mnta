@@ -7,10 +7,10 @@ OUT := ./mnta
 all: $(OUT)
 
 $(OUT): $(SRC)
-	$(COMPILER) $(COMPILERFLAGS) -o $(OUT) $(SRC) $(LINKERFLAGS)
+	$(COMPILER) $(COMPILERFLAGS) -o $(OUT) $(SRC) $(LINKERFLAGS) -lm
 
 debug:
-	$(COMPILER) $(COMPILERFLAGS) -g -o $(OUT) $(SRC) $(LINKERFLAGS)
+	$(COMPILER) $(COMPILERFLAGS) -g -o $(OUT) $(SRC) $(LINKERFLAGS) -lm
 
 clean:
 	rm -f $(OUT)

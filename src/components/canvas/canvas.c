@@ -3,6 +3,8 @@
 #include "../../context/context.h"
 #include "glib.h"
 
+#define KEYBOARD_NAVIGATION_SENSITIVITY 25
+
 typedef struct {
     GtkWidget *canvas;
     GtkWidget *canvas_container;
@@ -21,7 +23,7 @@ static Position *calculate_canvas_position(gint x, gint y) {
     return new_canvas_position;
 }
 
-static gboolean on_button_press(GtkWidget *widget, GdkEventButton *event, EventContext *context) {
+static gboolean on_press(GtkWidget *widget, GdkEventButton *event, EventContext *context) {
     gtk_widget_translate_coordinates(
         context->canvas,
         context->canvas_container,
@@ -37,7 +39,7 @@ static gboolean on_button_press(GtkWidget *widget, GdkEventButton *event, EventC
     return TRUE;
 }
 
-static gboolean on_button_release(GtkWidget *widget, GdkEventButton *event, EventContext *context) {
+static gboolean on_release(GtkWidget *widget, GdkEventButton *event, EventContext *context) {
     dragging_state.is_dragging = FALSE;
 
     Position *canvas_position = calculate_canvas_position(event->x_root, event->y_root);
@@ -67,12 +69,13 @@ GtkWidget* setup_canvas(GtkWidget *window) {
     context->canvas = canvas;
 
     gtk_widget_set_events(canvas_container, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK);
-    g_signal_connect(canvas_container, "button-press-event", G_CALLBACK(on_button_press), context);
-    g_signal_connect(canvas_container, "button-release-event", G_CALLBACK(on_button_release), context);
+    g_signal_connect(canvas_container, "button-press-event", G_CALLBACK(on_press), context);
+    g_signal_connect(canvas_container, "button-release-event", G_CALLBACK(on_release), context);
     g_signal_connect(canvas_container, "motion-notify-event", G_CALLBACK(on_motion_notify), context);
 
     gtk_widget_set_has_window(canvas_container, TRUE);
-    gtk_widget_show_all(canvas_container);
+    gtk_widget_show(canvas_container);
+    gtk_widget_show(canvas);
 
     gtk_container_add(GTK_CONTAINER(canvas_container), canvas);
     gtk_container_add(GTK_CONTAINER(window), canvas_container);
@@ -81,4 +84,36 @@ GtkWidget* setup_canvas(GtkWidget *window) {
     context_set_canvas_container(canvas_container);
 
     return canvas;
+}
+
+static void keyboard_canvas_navigation(gint delta_x, gint delta_y) {
+    AppContext context = context_get();
+
+    Position *new_canvas_position = g_new(Position, 1);
+    new_canvas_position->x = context.current_canvas_position->x + delta_x;
+    new_canvas_position->y = context.current_canvas_position->y + delta_y;
+
+    context_set_current_canvas_position(new_canvas_position);
+    gtk_fixed_move(
+        GTK_FIXED(context.canvas_container),
+        context.canvas,
+        new_canvas_position->x,
+        new_canvas_position->y
+    );
+}
+
+void move_canvas_left() {
+    keyboard_canvas_navigation(KEYBOARD_NAVIGATION_SENSITIVITY, 0);
+}
+
+void move_canvas_right() {
+    keyboard_canvas_navigation(-KEYBOARD_NAVIGATION_SENSITIVITY, 0);
+}
+
+void move_canvas_up() {
+    keyboard_canvas_navigation(0, KEYBOARD_NAVIGATION_SENSITIVITY);
+}
+
+void move_canvas_down() {
+    keyboard_canvas_navigation(0, -KEYBOARD_NAVIGATION_SENSITIVITY);
 }
