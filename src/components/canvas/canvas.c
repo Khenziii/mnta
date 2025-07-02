@@ -3,6 +3,8 @@
 #include "../../context/context.h"
 #include "glib.h"
 
+#define KEYBOARD_NAVIGATION_SENSITIVITY 25
+
 typedef struct {
     GtkWidget *canvas;
     GtkWidget *canvas_container;
@@ -82,4 +84,36 @@ GtkWidget* setup_canvas(GtkWidget *window) {
     context_set_canvas_container(canvas_container);
 
     return canvas;
+}
+
+static void keyboard_canvas_navigation(gint delta_x, gint delta_y) {
+    AppContext context = context_get();
+
+    Position *new_canvas_position = g_new(Position, 1);
+    new_canvas_position->x = context.current_canvas_position->x + delta_x;
+    new_canvas_position->y = context.current_canvas_position->y + delta_y;
+
+    context_set_current_canvas_position(new_canvas_position);
+    gtk_fixed_move(
+        GTK_FIXED(context.canvas_container),
+        context.canvas,
+        new_canvas_position->x,
+        new_canvas_position->y
+    );
+}
+
+void move_canvas_left() {
+    keyboard_canvas_navigation(KEYBOARD_NAVIGATION_SENSITIVITY, 0);
+}
+
+void move_canvas_right() {
+    keyboard_canvas_navigation(-KEYBOARD_NAVIGATION_SENSITIVITY, 0);
+}
+
+void move_canvas_up() {
+    keyboard_canvas_navigation(0, KEYBOARD_NAVIGATION_SENSITIVITY);
+}
+
+void move_canvas_down() {
+    keyboard_canvas_navigation(0, -KEYBOARD_NAVIGATION_SENSITIVITY);
 }

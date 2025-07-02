@@ -42,6 +42,27 @@ static gboolean on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer dat
     if (context.is_editor_currently_open) return FALSE;
 
     char *key = g_ascii_strup(gdk_keyval_name(event->keyval), -1);
+
+    if (strcmp(key, "H") == 0) {
+        move_canvas_left();
+        return FALSE;
+    }
+
+    if (strcmp(key, "J") == 0) {
+        move_canvas_down();
+        return FALSE;
+    }
+
+    if (strcmp(key, "K") == 0) {
+        move_canvas_up();
+        return FALSE;
+    }
+
+    if (strcmp(key, "L") == 0) {
+        move_canvas_right();
+        return FALSE;
+    }
+
     if (strcmp(key, "F") == 0) {
         strcpy(context.navigation_hints->currently_entered, "");
         
