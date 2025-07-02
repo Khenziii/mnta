@@ -58,12 +58,6 @@ static gboolean on_motion_notify(GtkWidget *widget, GdkEventMotion *event, Event
     return TRUE;
 }
 
-static gboolean on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data) {
-    g_print("Key pressed: %s (keyval: %u)\n", gdk_keyval_name(event->keyval), event->keyval);
-
-    return TRUE;
-}
-
 static gboolean on_destroy(GtkWidget *widget, EventContext *context) {
     g_free(context);
     return TRUE;

@@ -5,6 +5,29 @@
 #include "./filesystem/filesystem.h"
 #include "./context/context.h"
 
+static void make_character_of_label_bold(GtkLabel *label, int index) {
+    guint amount_of_bold_chars = index+1;
+    const char *label_text = gtk_label_get_text(label);
+
+    // Copy first `amount_of_bold_chars` chars from `label_text`.
+    char *bold_text = malloc(amount_of_bold_chars + 1);
+    strncpy(bold_text, label_text, amount_of_bold_chars);
+    bold_text[amount_of_bold_chars] = '\0';
+
+    char *markup = g_strdup_printf("<b>%s</b>%s", bold_text, &label_text[amount_of_bold_chars]);
+    gtk_label_set_markup(GTK_LABEL(label), markup);
+}
+
+static void make_matching_chararcters_of_label_bold(GtkLabel *label, char *text) {
+    const char *label_text = gtk_label_get_text(label);
+    for (int i = 0; i < strlen(text); i++) {
+        char current_char = text[i];
+        if (label_text[i] == current_char) {
+            make_character_of_label_bold(label, i);
+        }
+    }
+}
+
 static void check_if_widget_was_activated(FileWidget *activated_widget_buffer, char *entered_text, FileWidget *possible_widget) {
     GtkWidget *possible_label = possible_widget->label;
     const char *possible_label_text = gtk_label_get_text(GTK_LABEL(possible_label));
@@ -55,7 +78,23 @@ static gboolean on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer dat
         *navigation_tips_shown = FALSE;
         context_set_navigation_hints_are_currently_shown(navigation_tips_shown);
         strcpy(context.navigation_hints->currently_entered, "");
+        return FALSE;
     }
+
+    for (int i = 0; i < context.amount_of_current_file_widgets; i++) {
+        FileWidget *current_widget = context.current_file_widgets[i];
+        GtkLabel *current_label = GTK_LABEL(current_widget->label);
+        make_matching_chararcters_of_label_bold(
+            current_label,
+            context.navigation_hints->currently_entered
+        );
+    }
+    FileWidget *current_widget = context.navigation.previous_directory;
+    GtkLabel *current_label = GTK_LABEL(current_widget->label);
+    make_matching_chararcters_of_label_bold(
+        current_label,
+        context.navigation_hints->currently_entered
+    );
 
     return FALSE;
 }
