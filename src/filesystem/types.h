@@ -18,6 +18,7 @@ typedef struct Settings {
     DefaultFilesPlacement *default_files_placement;
     char *editor_launch_command;
     char *background_color_hex;
+    int *keyboard_navigation_sensitivity;
 } Settings;
 
 typedef struct UIState {

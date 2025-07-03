@@ -98,6 +98,9 @@ Settings* parse_settings_json_string(char *json_string) {
     char *background_color_hex = get_string_field(root, "Settings", "background_color_hex", settings);
     settings->background_color_hex = background_color_hex;
 
+    int *keyboard_navigation_sensitivity = get_int_field(root, "Settings", "keyboard_navigation_sensitivity", settings);
+    settings->keyboard_navigation_sensitivity = keyboard_navigation_sensitivity;
+
     cJSON *default_files_placement_json = get_object_field(root, "Settings", "default_files_placement", settings);
     DefaultFilesPlacement *default_files_placement = parse_default_files_placement_json(default_files_placement_json);
     settings->default_files_placement=default_files_placement;
