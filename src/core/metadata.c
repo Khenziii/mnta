@@ -1,19 +1,13 @@
-#include "assert.h"
-#include "../utils/utils.h"
-
-// TODO: support changing this via config.
-#define FILES_PER_ROW 5
-#define FILES_MARGIN_HORIZONTAL 300
-#define FILES_MARGIN_VERTICAL 100
-#define FILES_CONTAINER_PADDING 50
+#include "../filesystem/filesystem.h"
 
 Metadata get_for_path(char absolute_path[], int element_count) {
+    Settings settings = get_settings();
+    DefaultFilesPlacement *files_config = settings.default_files_placement;
+    int amount_of_rows = (element_count - 1) / files_config->files_per_row;
+
     Metadata metadata;
-
-    int amount_of_rows = (element_count - 1) / FILES_PER_ROW;
-
-    metadata.saved_location.x = FILES_CONTAINER_PADDING + ((element_count - 1 - amount_of_rows * FILES_PER_ROW) * FILES_MARGIN_HORIZONTAL);
-    metadata.saved_location.y = FILES_CONTAINER_PADDING + (amount_of_rows * FILES_MARGIN_VERTICAL);
+    metadata.saved_location.x = files_config->container_padding + ((element_count - 1 - amount_of_rows * files_config->files_per_row) * files_config->margin_horizontal);
+    metadata.saved_location.y = files_config->container_padding + (amount_of_rows * files_config->margin_vertical);
 
     return metadata;
 }

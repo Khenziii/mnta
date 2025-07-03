@@ -70,12 +70,40 @@ static cJSON* parse_json_string(char *json_string, char *object_name, void *obje
     return root;
 }
 
+DefaultFilesPlacement *parse_default_files_placement_json(cJSON *root) {
+    DefaultFilesPlacement *default_files_placement = g_new(DefaultFilesPlacement, 1);
+
+    int *files_per_row = get_int_field(root, "DefaultFilesPlacement", "files_per_row", default_files_placement);
+    default_files_placement->files_per_row = *files_per_row;
+
+    int *margin_vertical = get_int_field(root, "DefaultFilesPlacement", "margin_vertical", default_files_placement);
+    default_files_placement->margin_vertical = *margin_vertical;
+
+    int *margin_horizontal = get_int_field(root, "DefaultFilesPlacement", "margin_horizontal", default_files_placement);
+    default_files_placement->margin_horizontal = *margin_horizontal;
+
+    int *container_padding = get_int_field(root, "DefaultFilesPlacement", "container_padding", default_files_placement);
+    default_files_placement->container_padding = *container_padding;
+
+    return default_files_placement;
+}
+
 Settings* parse_settings_json_string(char *json_string) {
     Settings *settings = g_new(Settings, 1);
     cJSON *root = parse_json_string(json_string, "Settings", settings);
 
     char *editor_launch_command = get_string_field(root, "Settings", "editor_launch_command", settings);
     settings->editor_launch_command = editor_launch_command;
+
+    char *background_color_hex = get_string_field(root, "Settings", "background_color_hex", settings);
+    settings->background_color_hex = background_color_hex;
+
+    int *keyboard_navigation_sensitivity = get_int_field(root, "Settings", "keyboard_navigation_sensitivity", settings);
+    settings->keyboard_navigation_sensitivity = keyboard_navigation_sensitivity;
+
+    cJSON *default_files_placement_json = get_object_field(root, "Settings", "default_files_placement", settings);
+    DefaultFilesPlacement *default_files_placement = parse_default_files_placement_json(default_files_placement_json);
+    settings->default_files_placement=default_files_placement;
 
     return settings;
 }
