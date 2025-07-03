@@ -11,8 +11,7 @@ VteTerminal *vte_terminal;
 static void update_terminal_size_to_fit_container() {
     GtkAllocation allocation;
     gtk_widget_get_allocation(container, &allocation);
-
-    gtk_widget_set_size_request(GTK_WIDGET(terminal), allocation.width, allocation.height);
+    gtk_widget_size_allocate(GTK_WIDGET(terminal), &allocation);
 }
 
 static void on_terminal_exit(VteTerminal *passed_terminal, int status, gpointer user_data) {

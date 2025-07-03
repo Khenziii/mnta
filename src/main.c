@@ -1,5 +1,8 @@
 #include "glib.h"
 #include <gtk/gtk.h>
+#include <libgen.h>
+#include <stdlib.h>
+#include <string.h>
 #include "./styles/styles.h"
 #include "./components/components.h"
 #include "./filesystem/filesystem.h"
@@ -120,7 +123,7 @@ static gboolean on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer dat
     return FALSE;
 }
 
-static void activate(GtkApplication *app, gpointer path) {
+static void activate(GtkApplication *app, char *path) {
     GtkWidget *window = gtk_application_window_new(app);
     gtk_window_set_title(GTK_WINDOW(window), "MNTA");
     gtk_window_set_default_size(GTK_WINDOW(window), 500, 500);
@@ -136,7 +139,36 @@ static void activate(GtkApplication *app, gpointer path) {
     setup_canvas(window);
     context_setup_default();
 
-    switch_directory(path);
+    gboolean path_is_directory = directory_exists(path);
+    if (path_is_directory) {
+        switch_directory(path);
+    } else {
+        char absolute_file_path[PATH_MAX];
+        if (realpath(path, absolute_file_path) == NULL) {
+            perror("realpath");
+        }
+        char *absolute_file_path_dup = strdup(absolute_file_path);
+        char *dir_path = dirname(absolute_file_path_dup);
+
+        switch_directory(dir_path);
+
+        Item *opened_file = g_new0(Item, 1);
+        AppContext context = context_get();
+        for (int i = 0; i < context.amount_of_current_file_widgets; i++) {
+            FileWidget *current_widget = context.current_file_widgets[i];
+            Item *current_file = current_widget->item;
+
+            if (strcmp(current_file->path, absolute_file_path) == 0) {
+                *opened_file = *current_file;
+            }
+        }
+        
+        if (opened_file->path != NULL) file_click_handler(*opened_file);
+    }
+}
+
+static void open(GtkApplication *app, GFile **files, gint n_files, const gchar *hint, char *path) {
+    activate(app, path);
 }
 
 int main(int argc, char *argv[]) {
@@ -146,8 +178,9 @@ int main(int argc, char *argv[]) {
     GtkApplication *app;
     int status;
 
-    app = gtk_application_new("dev.khenzii.mnta", G_APPLICATION_DEFAULT_FLAGS);
+    app = gtk_application_new("dev.khenzii.mnta", G_APPLICATION_HANDLES_OPEN);
     g_signal_connect(app, "activate", G_CALLBACK(activate), path);
+    g_signal_connect(app, "open", G_CALLBACK(open), path);
     status = g_application_run(G_APPLICATION(app), argc, argv);
     g_object_unref(app);
 
