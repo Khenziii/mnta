@@ -112,6 +112,8 @@ static void add_default_json(char *path, void (*default_config_generator)(cJSON 
 static void default_settings_generator(cJSON *json_object) {
     cJSON_AddStringToObject(json_object, "editor_launch_command", "nvim");
 
+    cJSON_AddStringToObject(json_object, "background_color_hex", "#171617");
+
     cJSON *default_files_placement = cJSON_CreateObject();
     cJSON_AddNumberToObject(default_files_placement, "files_per_row", 5);
     cJSON_AddNumberToObject(default_files_placement, "margin_horizontal", 300);

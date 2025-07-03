@@ -95,6 +95,9 @@ Settings* parse_settings_json_string(char *json_string) {
     char *editor_launch_command = get_string_field(root, "Settings", "editor_launch_command", settings);
     settings->editor_launch_command = editor_launch_command;
 
+    char *background_color_hex = get_string_field(root, "Settings", "background_color_hex", settings);
+    settings->background_color_hex = background_color_hex;
+
     cJSON *default_files_placement_json = get_object_field(root, "Settings", "default_files_placement", settings);
     DefaultFilesPlacement *default_files_placement = parse_default_files_placement_json(default_files_placement_json);
     settings->default_files_placement=default_files_placement;

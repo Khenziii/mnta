@@ -17,6 +17,7 @@ typedef struct DefaultFilesPlacement {
 typedef struct Settings {
     DefaultFilesPlacement *default_files_placement;
     char *editor_launch_command;
+    char *background_color_hex;
 } Settings;
 
 typedef struct UIState {
