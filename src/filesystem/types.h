@@ -7,7 +7,15 @@ typedef struct Items {
     int count;
 } Items;
 
+typedef struct DefaultFilesPlacement {
+    int files_per_row;
+    int margin_horizontal;
+    int margin_vertical;
+    int container_padding;
+} DefaultFilesPlacement;
+
 typedef struct Settings {
+    DefaultFilesPlacement *default_files_placement;
     char *editor_launch_command;
 } Settings;
 
