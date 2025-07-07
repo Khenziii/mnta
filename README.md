@@ -8,10 +8,10 @@ MNTA (minimalistic note-taking app) is a simple GTK app written in C that allows
 
 Out of the box keyboard navigation works as follows:
 
-F - show [Vimium](https://github.com/philc/vimium)-like navigation hints,
-H - move left,
-J - move down,
-K - move up,
+F - show [Vimium](https://github.com/philc/vimium)-like navigation hints, <br />
+H - move left, <br />
+J - move down, <br />
+K - move up, <br />
 L - move right.
 
 ## Configuration
