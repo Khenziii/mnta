@@ -2,7 +2,17 @@
 
 MNTA (minimalistic note-taking app) is a simple GTK app written in C that allows you to organize your notes and interact with them all from your keyboard. It's configurable and simple.
 
-![Demo](./docs/output.gif)
+![Demo](./docs/demo.gif)
+
+## Usage
+
+Out of the box keyboard navigation works as follows:
+
+F - show [Vimium](https://github.com/philc/vimium)-like navigation hints,
+H - move left,
+J - move down,
+K - move up,
+L - move right.
 
 ## Configuration
 
