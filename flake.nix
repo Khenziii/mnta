@@ -24,7 +24,7 @@
           inherit (shared) buildInputs nativeBuildInputs;
 
           buildPhase = ''
-            make
+            make production
           '';
 
           installPhase = ''
