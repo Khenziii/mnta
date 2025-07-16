@@ -11,7 +11,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install dependencies
-        run: apt install libgtk-3-dev gir1.2-vte-2.91 libjson-glib-1.0-0
+        run: sudo apt install libgtk-3-dev gir1.2-vte-2.91 libjson-glib-1.0-0
 
       - name: Compile
         run: make production
