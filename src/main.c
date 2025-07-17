@@ -46,6 +46,13 @@ static gboolean on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer dat
 
     char *key = g_ascii_strup(gdk_keyval_name(event->keyval), -1);
 
+    if (strcmp(key, "ESCAPE") == 0) {
+        context_hide_navigation_hints();
+        return FALSE;
+    }
+
+    if (strlen(key) > 1) return FALSE;
+
     if (strcmp(key, "H") == 0) {
         move_canvas_left();
         return FALSE;
@@ -67,12 +74,7 @@ static gboolean on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer dat
     }
 
     if (strcmp(key, "F") == 0) {
-        strcpy(context.navigation_hints->currently_entered, "");
-        
-        gboolean *are_navigation_hints_currently_shown = context.navigation_hints->are_currently_shown;
-        gboolean *negated = g_new(gboolean, 1);
-        *negated = !(*are_navigation_hints_currently_shown);
-        context_set_navigation_hints_are_currently_shown(negated);
+        context_toggle_navigation_hints();
         return FALSE;
     }
     if (!(*context.navigation_hints->are_currently_shown)) return FALSE;
@@ -98,10 +100,7 @@ static gboolean on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer dat
             file_click_handler(*activated_widget->item);
         }
 
-        gboolean *navigation_tips_shown = g_new(gboolean, 1);
-        *navigation_tips_shown = FALSE;
-        context_set_navigation_hints_are_currently_shown(navigation_tips_shown);
-        strcpy(context.navigation_hints->currently_entered, "");
+        context_hide_navigation_hints();
         return FALSE;
     }
 

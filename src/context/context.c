@@ -88,3 +88,22 @@ AppContext context_set_navigation_hints_are_currently_shown(gboolean *are_curren
     context.navigation_hints->are_currently_shown = are_currently_shown;
     return context;
 }
+
+AppContext context_hide_navigation_hints() {
+    strcpy(context.navigation_hints->currently_entered, "");
+
+    gboolean *navigation_tips_shown = g_new(gboolean, 1);
+    *navigation_tips_shown = FALSE;
+
+    return context_set_navigation_hints_are_currently_shown(navigation_tips_shown);
+}
+
+AppContext context_toggle_navigation_hints() {
+    strcpy(context.navigation_hints->currently_entered, "");
+        
+    gboolean *are_navigation_hints_currently_shown = context.navigation_hints->are_currently_shown;
+    gboolean *negated = g_new(gboolean, 1);
+    *negated = !(*are_navigation_hints_currently_shown);
+    
+    return context_set_navigation_hints_are_currently_shown(negated);
+}

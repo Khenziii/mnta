@@ -28,4 +28,6 @@ extern AppContext context_set_canvas(GtkWidget *canvas);
 extern AppContext context_set_canvas_container(GtkWidget *canvas_container);
 extern AppContext context_set_is_editor_currently_open(gboolean *is_editor_currently_open);
 extern AppContext context_set_navigation_hints_are_currently_shown(gboolean *are_currently_shown);
+extern AppContext context_hide_navigation_hints();
+extern AppContext context_toggle_navigation_hints();
 extern void context_remove_all_file_widgets();
